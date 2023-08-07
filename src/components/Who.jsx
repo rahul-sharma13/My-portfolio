@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { OrbitControls} from '@react-three/drei';
 import { Canvas } from 'react-three-fiber';
@@ -69,9 +69,10 @@ const Button = styled(motion.button)`
   border: none;
   border-radius: 10px; 
   font-family: 'Poppins',sans-serif;
+  cursor: pointer;
 `;
 
-const Right = styled.div`
+const Right = styled(motion.div)`
   flex: 1;      
   display: flex;
   flex-direction: column;
@@ -82,6 +83,11 @@ const Right = styled.div`
     text-align: center;
   }
 `;
+
+const Span = styled.span`
+  color: #7CB9E8;
+  font-size: 20px;
+`
 
 const Who = () => {
   return (
@@ -95,11 +101,18 @@ const Who = () => {
             <Cube />
           </Canvas>
         </Left>
-        <Right>
-          <SubHeading>My Work</SubHeading>
-          <Title> Projects </Title>
+        <Right initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{
+                duration: 0.8,
+                delay: 0.5,
+                ease: [0, 0.71, 0.2, 1.01]
+              }}
+        >
+            <SubHeading>My Work</SubHeading>
+            <Title> Projects </Title>  
           <Desc>
-           Welcome to the Project Showcase! Here, I am thrilled to present a collection of dynamic and immersive web development projects crafted with ReactJS, Framer Motion, and Three.js. As a passionate web developer, I have harnessed the power of these cutting-edge technologies to create captivating user experiences that push the boundaries of digital innovation. Each project displayed here is a testament to my dedication to delivering visually stunning and highly interactive web applications. Whether it's seamless animations brought to life with Framer Motion, intricate 3D worlds realized through Three.js, or feature-rich ReactJS applications, I invite you to dive into this gallery and witness the fusion of creativity and technical prowess in the world of web development. Explore and experience the magic that unfolds when innovation meets code!
+           Welcome to the Project Showcase! Here, I am thrilled to present a collection of dynamic and immersive web development projects crafted with ReactJS, Framer Motion, and Three.js. As a passionate web developer, I have harnessed the power of these cutting-edge technologies to create captivating user experiences that push the boundaries of digital innovation. Each project displayed here is a testament to my dedication to delivering visually stunning and highly interactive web applications. Whether it's seamless animations brought to life with Framer Motion, intricate 3D worlds realized through Three.js, or feature-rich ReactJS applications.
           </Desc>
           <Button whileHover={{
                     scale:1.1,
@@ -108,7 +121,9 @@ const Who = () => {
                     boxShadow:"0px 0px 8px rgb(209, 139, 187)",
                 }} whileTap={{scale:0.9,
                     color:"#8e0959"
-                }} >See Projects</Button>
+                }} > Libraries I used </Button>
+                
+          <br /> <Span> Scroll down for my projects. </Span> 
         </Right>
       </Container>
     </Section>

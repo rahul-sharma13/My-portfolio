@@ -43,12 +43,12 @@ const Left = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #C54B8C;
+  color: #4c4198;
   font-size: 50px;
   font-family: 'Poppins',sans-serif;
   margin-bottom: 30px;
   padding-bottom: 10px;
-  font-weight: 800;
+  font-weight: 900;
 `
 
 const List = styled.ul`
@@ -78,7 +78,7 @@ const ListItem = styled(motion.li)`
     position: absolute;
     top: 0;
     left: 0;
-    color: #C54B8C;
+    color: #7CB9E8;
     width: 0;
     overflow: hidden;
     white-space: nowrap;

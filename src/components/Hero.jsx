@@ -4,7 +4,8 @@ import Navbar from './Navbar';
 import { Sphere, OrbitControls, MeshDistortMaterial  } from '@react-three/drei';
 import { Canvas } from 'react-three-fiber';
 import Typed from 'typed.js';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const Section = styled.div`
   height: 100vh;
@@ -34,7 +35,7 @@ const Container = styled.div`
     justify-content: center;
   }
 `
-const Left = styled.div`
+const Left = styled(motion.div)`
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -47,7 +48,7 @@ const Left = styled.div`
     align-items: center;
   }
 `
-const Title = styled.h1`
+const Title = styled(motion.h1)`
   font-size: 74px;
   font-weight: 800;
   margin: 0;
@@ -56,7 +57,7 @@ const Title = styled.h1`
   }
 `
 
-const WhatIDo = styled.h2`
+const WhatIDo = styled(motion.h2)`
   margin: 0px;
   line-height: 10px;
   font-size: 48px;
@@ -66,10 +67,10 @@ const WhatIDo = styled.h2`
 const Span = styled.span`
   white-space: nowrap;
   font-weight: 700;
-  color: #da4ea2;
+  color: #7CB9E8;
 `
 
-const Desc = styled.p`
+const Desc = styled(motion.p)`
   font-size: 16px;
   color: #a39b9b;
   max-width: 475px;
@@ -86,9 +87,9 @@ const Desc = styled.p`
 
 const Button = styled(motion.button)`
   padding: 15px;
-  background-color: #da4ea2;
-  color: #fff; 
+  background-color: #7CB9E8;
   font-size: 14px;
+  color: #fff;
   font-weight: 500;
   border: none;
   width: fit-content;
@@ -130,6 +131,33 @@ const Img = styled.img`
 `
 
 const Hero = () => {
+  //creating animation
+  const mainTitleCtrl = useAnimation();
+  const subHeadCtrl = useAnimation();
+  const paragraphCtrl = useAnimation();
+  const buttonCtrl = useAnimation();
+
+  //creating a sequence in which animations would proceed with help of async function.
+  const animationSequence = async () => {
+    await mainTitleCtrl.start({ opacity: 1, scale: 1 });
+    await subHeadCtrl.start({ opacity: 1, scale: [1.5 , 1] });
+    await paragraphCtrl.start({opacity: 1, scale: 1});
+    return await buttonCtrl.start({ opacity: 1, scale: [1.5,1,1.3,1] });
+  }
+
+  //triggering based on appearance on screen.
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+  });
+  useEffect(()=>{
+    if(inView){
+      animationSequence();
+    }
+    if(!inView){
+      console.log("Hero not in view");
+    }
+  },[inView]);
+
 
   //for typedjs
   const wrap = useRef(null);
@@ -154,24 +182,41 @@ const Hero = () => {
   },[]);
 
   return (
-    <Section id="home">
+    <Section id="home" ref={ref}>
       <Navbar />
        <Container>
-        <Left>
-          <Title>Hello</Title>
-          <WhatIDo> I am a <Span ref={wrap}></Span> </WhatIDo>
-          
-          <Desc>
+        <Left> 
+          <Title 
+          initial={{ opacity:0, scale:0.5 }}
+          animate={mainTitleCtrl}
+          transition={{
+            duration: 0.8,
+          }} >Hello</Title>
+          <WhatIDo 
+            initial={{opacity:0, scale:0.5}} 
+            animate={subHeadCtrl}
+            transition={{
+              duration: 0.8,
+            }}
+          > I am a <Span ref={wrap}></Span> </WhatIDo> 
+          <Desc
+            initial={{ opacity:0 , scale:0.5 }}
+            animate={paragraphCtrl}
+            transition={{
+              duration:0.8,
+            }}
+          >
             Passionate web developer skilled in crafting dynamic and user-friendly websites. Bringing creative designs to life with a strong focus on functionality and seamless user experiences.
           </Desc>
-          <Button whileHover={{
-                    scale:1.1,
-                    transition:{duration:0.2},
-                    textShadow:"0px 0px 8px rgb(51, 149, 214)",
-                    boxShadow:"0px 0px 8px rgb(51, 149, 214)",
-                }} whileTap={{scale:0.9,
-                    color:"#8e0959"
-                }} >Download CV</Button>
+          <Button 
+                  initial={{opacity:0 , scale:0 }}
+                  animate={buttonCtrl}
+                  transition={{
+                    duration:0.8,
+                    damping:3,
+                    type:"spring",
+                  }}          
+           >  Download CV  </Button>
         </Left>
         <Right>
         <Canvas camera={{fov:25 , position:[5,5,5]}}>
@@ -180,7 +225,7 @@ const Hero = () => {
             <directionalLight position={[3,2,1]} />
             <Sphere args={[1,100,200]} scale={1.3} >
               <MeshDistortMaterial
-                color="pink"
+                color="#7CB9E8"
                 attach="material"
                 distort={0.5}
                 speed={2}

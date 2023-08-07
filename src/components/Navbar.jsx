@@ -58,7 +58,7 @@ const ListItem = styled.li`
     border-radius: 12px;
 
     &:hover {
-        background-color: #da4ea2;
+        background-color: #7CB9E8;
         transition: ease-in 0.3s;
     }
 `;
@@ -75,12 +75,13 @@ const Icons = styled.div`
 `;
 
 const Button = styled(motion.button)`
-    width: 100px;
+    width: fit-content;
+    text-align: center;
     font-size: 16px;
     font-weight: 500;
     font-family: 'Poppins',sans-serif;
     padding: 10px;
-    background-color: #da4ea2;
+    background-color: #7CB9E8;
     color: white; 
     border: 10px;
     border-radius: 12px;
@@ -109,7 +110,7 @@ const Navbar = () => {
                     boxShadow:"0px 0px 8px rgb(209, 139, 187)",
                 }} whileTap={{scale:0.9,
                     color:"#8e0959"
-                }} > Hire Now </Button>
+                }} > Source Code </Button>
             </Icons>
         </Container>
     </Section>

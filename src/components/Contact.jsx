@@ -1,15 +1,35 @@
-import React from 'react';
 import styled from 'styled-components';
 import EarthCanvas from './canvas/Earth';
-import { useState, useRef } from 'react';
+import React ,{ useState, useRef, useEffect } from 'react';
 import emailjs from "@emailjs/browser";
-import { motion } from 'framer-motion';
+import { motion , useInView, useAnimation } from 'framer-motion';
+
+//creating the animation to be used.
+const slideIn = (direction, type, delay, duration) => {
+    return {
+      hidden: {
+        x: direction === "left" ? "-100%" : direction === "right" ? "100%" : 0,
+        y: direction === "up" ? "100%" : direction === "down" ? "100%" : 0,
+      },
+      show: {
+        x: 0,
+        y: 0,
+        transition: {
+          type: type,
+          delay: delay,
+          duration: duration,
+          ease: "easeOut",
+        },
+      },
+    };
+  };
 
 const Section = styled.div`
   height: 100vh;
   scroll-snap-align: center;
   position: relative;
 `;
+
 const Container = styled.div`
   width: 100%;
   height: 95%;
@@ -20,7 +40,6 @@ const Container = styled.div`
   z-index: 1;
   top: 60px;
   overflow: hidden;
-  opacity: 0.8;
 `;
 
 const Left = styled.div`
@@ -34,7 +53,7 @@ const Left = styled.div`
   }
 `;
 
-const Cleft = styled.div`
+const Cleft = styled(motion.div)`
   /* background-color: #01796f; */
   padding: 50px 25px;
   border-radius: 25px;
@@ -105,7 +124,7 @@ const Right = styled.div`
   }
 `;
 
-const Cright = styled.div`   //div to position canvas correctly
+const Cright = styled(motion.div)`   //div to position canvas correctly
   width: 50vw;
   height: 100%;
   overflow-x: hidden;
@@ -123,6 +142,19 @@ const Contact = () => {
     message:""
   });
   const [loading, setLoading] = useState(false);
+
+  //hooks used in term to make animation while the section is in view or on screen.
+  const ref = useRef(null);       //to refer the div/section we apply animation on 
+  const isInView = useInView(ref);   
+  const mainControls = useAnimation();    
+  useEffect(()=>{
+    if(isInView){
+      mainControls.start("show");  //starts the "show" part of the variant we created . Changes from initial to show.
+    }
+    if(!isInView){
+      console.log("Contact not in view");
+    }
+  },[isInView]);
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -161,29 +193,37 @@ const Contact = () => {
   };
 
   return (
-    <Section id="contact">
+    <Section id="contact" ref={ref}>
       <Container>
         <Left>
-          <Cleft>
-          <SubTitle>Get in touch.</SubTitle>
-          <Title>Contact Me</Title>
-            <Form ref={formRef} onSubmit={handleSubmit}>
-              <Input name="name" value={form.name} placeholder="Name" onChange={handleChange} autoComplete="off"/>
-              <Input name="email" value={form.email} placeholder="Email" onChange={handleChange} autoComplete="off" />
-              <TextArea name="message" value={form.message} placeholder="Write your message" rows={10} onChange={handleChange} autoComplete="off"/>
-              <Button whileHover={{
-                    scale:1.1,
-                    transition:{duration:0.2},
-                    textShadow:"0px 0px 8px rgb(209, 139, 187)",
-                    boxShadow:"0px 0px 8px rgb(209, 139, 187)",
-                }} whileTap={{scale:0.9,
-                    color:"#8e0959"
-                }} type="submit">{loading? "Sending...":"Send"}</Button>
-            </Form>
-          </Cleft>
-        </Left>
+          <Cleft 
+            variants={slideIn("left","tween",0.2,1)}
+            initial="hidden"
+            animate={mainControls} 
+          >
+            <SubTitle>Get in touch.</SubTitle>
+            <Title>Contact Me</Title>
+              <Form ref={formRef} onSubmit={handleSubmit}>
+                <Input name="name" value={form.name} placeholder="Name" onChange={handleChange} autoComplete="off"/>
+                <Input name="email" value={form.email} placeholder="Email" onChange={handleChange} autoComplete="off" />
+                <TextArea name="message" value={form.message} placeholder="Write your message" rows={10} onChange={handleChange} autoComplete="off"/>
+                <Button whileHover={{
+                      scale:1.1,
+                      transition:{duration:0.2},
+                      textShadow:"0px 0px 8px rgb(209, 139, 187)",
+                      boxShadow:"0px 0px 8px rgb(209, 139, 187)",
+                  }} whileTap={{scale:0.9,
+                      color:"#8e0959"
+                  }} type="submit">{loading? "Sending...":"Send"}</Button>
+              </Form>
+        </Cleft>
+      </Left>
         <Right>
-        <Cright>
+        <Cright 
+          variants={slideIn("right","tween",0.2,1)}
+          initial="hidden"
+          animate={mainControls} 
+        >
             <EarthCanvas />
           </Cright>  
         </Right>

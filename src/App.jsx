@@ -1,5 +1,5 @@
 import React from "react";
-import {Hero, Who, Work, Contact, SeeProjects} from "./components";
+import {Hero, Who, Work, Contact} from "./components";
 import styled from "styled-components";
 import StarsCanvas from "./components/canvas/StarCanvas";
 
